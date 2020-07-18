@@ -24,9 +24,20 @@ class _RandomWordsState extends State<RandomWords> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: const Text('Startup Name Generator'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.list),
+              onPressed: _pushSavedItems,
+            )
+          ],
         ),
         body: _buildSuggestions(context),
       );
+
+  void _pushSavedItems() {
+    Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (buildContext) => SavedWords(_saved)));
+  }
 
   Widget _buildSuggestions(BuildContext context) => ListView.builder(
       padding: EdgeInsets.all(16.0),
@@ -51,6 +62,46 @@ class _RandomWordsState extends State<RandomWords> {
       trailing: Icon(
         alreadySaved ? Icons.favorite : Icons.favorite_border,
         color: alreadySaved ? Colors.redAccent : null,
+      ),
+      onTap: () {
+        setState(() {
+          if (alreadySaved) {
+            _saved.remove(pair);
+          } else {
+            _saved.add(pair);
+          }
+        });
+      },
+    );
+  }
+}
+
+class SavedWords extends StatefulWidget {
+  final Set<WordPair> savedItems;
+  SavedWords(this.savedItems);
+
+  @override
+  _SavedWordsState createState() => _SavedWordsState(savedItems);
+}
+
+class _SavedWordsState extends State<SavedWords> {
+  final Set<WordPair> savedItems;
+  _SavedWordsState(this.savedItems);
+
+  @override
+  Widget build(BuildContext context) {
+    final tiles = savedItems.map((pair) => ListTile(
+          title: Text(pair.asPascalCase, style: TextStyle(fontSize: 18)),
+        ));
+    final divided =
+        ListTile.divideTiles(context: context, tiles: tiles).toList();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Saved Suggestions'),
+      ),
+      body: ListView(
+        children: divided,
       ),
     );
   }
