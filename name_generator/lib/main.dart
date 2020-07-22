@@ -5,8 +5,14 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) =>
-      MaterialApp(title: 'Startup Name Generator', home: RandomWords());
+  Widget build(BuildContext context) => MaterialApp(
+        title: 'Startup Name Generator',
+        home: RandomWords(),
+        theme: ThemeData(
+            primaryColor: Colors.white,
+            scaffoldBackgroundColor: Colors.white,
+            appBarTheme: AppBarTheme.of(context).copyWith(elevation: 0.0)),
+      );
 }
 
 class RandomWords extends StatefulWidget {
@@ -35,8 +41,8 @@ class _RandomWordsState extends State<RandomWords> {
       );
 
   void _pushSavedItems() {
-    Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (buildContext) => SavedWords(_saved)));
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (buildContext) => SavedWords(_saved)));
   }
 
   Widget _buildSuggestions(BuildContext context) => ListView.builder(
@@ -78,6 +84,7 @@ class _RandomWordsState extends State<RandomWords> {
 
 class SavedWords extends StatefulWidget {
   final Set<WordPair> savedItems;
+
   SavedWords(this.savedItems);
 
   @override
@@ -86,6 +93,7 @@ class SavedWords extends StatefulWidget {
 
 class _SavedWordsState extends State<SavedWords> {
   final Set<WordPair> savedItems;
+
   _SavedWordsState(this.savedItems);
 
   @override
